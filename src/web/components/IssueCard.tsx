@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
-import { getEntity } from "@/lib/mock-data";
+import { ConfidenceBadge } from "@/components/ConfidenceBadge";
+import { getEntity, getIssueConfidenceSummary } from "@/lib/mock-data";
 import { ENTITY_TYPE_CHIP } from "@/lib/entity-style";
 import { cn } from "@/lib/utils";
 import type { Issue } from "@/lib/types";
@@ -9,6 +10,7 @@ export function IssueCard({ issue }: { issue: Issue }) {
   const affectedEntityIds = Array.from(
     new Set([issue.rootEntityId, ...issue.chain.map((step) => step.entityId)])
   );
+  const confidenceSummary = getIssueConfidenceSummary(issue);
 
   return (
     <Link
@@ -24,7 +26,16 @@ export function IssueCard({ issue }: { issue: Issue }) {
       <p className="mt-1.5 line-clamp-2 text-sm leading-relaxed text-muted-foreground">
         {issue.summary}
       </p>
-      <div className="mt-3 flex flex-wrap items-center gap-1.5">
+      <div className="mt-2.5 flex items-center gap-1.5">
+        <span className="text-xs font-medium text-muted-foreground/70">
+          종합 신뢰도
+        </span>
+        <ConfidenceBadge
+          status={confidenceSummary.status}
+          confidence={confidenceSummary.confidence}
+        />
+      </div>
+      <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
         {affectedEntityIds.slice(0, 4).map((id) => {
           const entity = getEntity(id);
           if (!entity) return null;

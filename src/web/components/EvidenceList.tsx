@@ -5,6 +5,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { getEvidenceList } from "@/lib/mock-data";
+import { SOURCE_TYPE_LABELS } from "@/lib/types";
 
 export function EvidenceList({ evidenceIds }: { evidenceIds: string[] }) {
   const evidenceList = getEvidenceList(evidenceIds);
@@ -34,6 +35,10 @@ export function EvidenceList({ evidenceIds }: { evidenceIds: string[] }) {
                 </span>
                 <span className="text-[11px] font-medium text-muted-foreground">
                   {evidence.source} · {evidence.publishedAt}
+                </span>
+                <span className="text-[11px] font-semibold text-muted-foreground/80">
+                  {SOURCE_TYPE_LABELS[evidence.sourceType]} · 출처 신뢰도{" "}
+                  {Math.round(evidence.sourceReliability * 100)}%
                 </span>
                 <span className="text-xs leading-relaxed text-muted-foreground">
                   {evidence.snippet}

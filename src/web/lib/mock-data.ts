@@ -1,4 +1,4 @@
-import type { Entity, Evidence, Issue, Relation } from "./types";
+import type { ClaimStatus, Entity, Evidence, Issue, Relation } from "./types";
 
 export const entities: Entity[] = [
   {
@@ -7,6 +7,11 @@ export const entities: Entity[] = [
     ticker: "NVDA",
     type: "company",
     description: "AI 가속기·GPU를 설계하는 미국 반도체 기업",
+    analyzers: [
+      { key: "news", status: "complete" },
+      { key: "earnings", status: "complete" },
+      { key: "summary", status: "analyzing", etaMinutes: 2 },
+    ],
   },
   {
     id: "sk-hynix",
@@ -14,6 +19,11 @@ export const entities: Entity[] = [
     ticker: "000660",
     type: "company",
     description: "HBM·D램 등 메모리 반도체를 생산하는 국내 기업",
+    analyzers: [
+      { key: "news", status: "complete" },
+      { key: "earnings", status: "complete" },
+      { key: "summary", status: "complete" },
+    ],
   },
   {
     id: "samsung",
@@ -21,6 +31,11 @@ export const entities: Entity[] = [
     ticker: "005930",
     type: "company",
     description: "메모리·파운드리·완제품을 아우르는 종합 반도체·전자 기업",
+    analyzers: [
+      { key: "news", status: "complete" },
+      { key: "earnings", status: "complete" },
+      { key: "summary", status: "complete" },
+    ],
   },
   {
     id: "hanmi-semi",
@@ -66,6 +81,8 @@ export const evidences: Evidence[] = [
     url: "https://example.com/news/nvidia-gpu-expansion",
     snippet:
       "엔비디아는 실적발표에서 차세대 GPU 생산 능력을 대폭 확대한다고 밝혔다. 이에 따라 GPU에 탑재되는 HBM 수요도 함께 늘어날 전망이다.",
+    sourceType: "wire",
+    sourceReliability: 0.82,
   },
   {
     id: "ev-2",
@@ -75,6 +92,8 @@ export const evidences: Evidence[] = [
     url: "https://example.com/news/hbm-supply-deal",
     snippet:
       "SK하이닉스와 삼성전자가 엔비디아向 HBM 공급 물량을 늘리기 위한 추가 계약을 협의 중인 것으로 확인됐다.",
+    sourceType: "press",
+    sourceReliability: 0.62,
   },
   {
     id: "ev-3",
@@ -84,6 +103,8 @@ export const evidences: Evidence[] = [
     url: "https://example.com/news/hanmi-backlog",
     snippet:
       "한미반도체의 HBM 후공정 장비 수주 잔고가 역대 최고치를 기록했다고 공시했다. HBM 생산 확대의 직접적인 수혜로 분석된다.",
+    sourceType: "disclosure",
+    sourceReliability: 0.92,
   },
   {
     id: "ev-4",
@@ -93,6 +114,8 @@ export const evidences: Evidence[] = [
     url: "https://example.com/news/semiconductor-etf-rally",
     snippet:
       "HBM 관련주 강세에 힘입어 국내 반도체 ETF들이 일제히 상승 마감했다.",
+    sourceType: "press",
+    sourceReliability: 0.58,
   },
   {
     id: "ev-5",
@@ -102,6 +125,8 @@ export const evidences: Evidence[] = [
     url: "https://example.com/news/amd-price-review",
     snippet:
       "경쟁사 엔비디아의 생산 확대 소식에 AMD가 가격 정책 조정을 검토하는 것으로 알려졌다. 단기적으로 마진 압박 우려가 제기된다.",
+    sourceType: "wire",
+    sourceReliability: 0.8,
   },
   {
     id: "ev-6",
@@ -111,6 +136,8 @@ export const evidences: Evidence[] = [
     url: "https://example.com/news/hynix-hbm4-qualification",
     snippet:
       "SK하이닉스가 엔비디아의 차세대 HBM4 품질 인증을 통과했다고 밝혔다. 차세대 제품 공급망에 우선 진입할 전망이다.",
+    sourceType: "press",
+    sourceReliability: 0.68,
   },
   {
     id: "ev-7",
@@ -120,6 +147,19 @@ export const evidences: Evidence[] = [
     url: "https://example.com/news/samsung-hbm4-qualification",
     snippet:
       "삼성전자도 엔비디아向 HBM4 품질 인증 마지막 단계에 있는 것으로 전해졌다.",
+    sourceType: "press",
+    sourceReliability: 0.6,
+  },
+  {
+    id: "ev-8",
+    title: "삼성전자, HBM 공급 협의설에 \"확정 아니다\" 공식 입장",
+    source: "삼성전자 IR",
+    publishedAt: "2026-07-20",
+    url: "https://example.com/news/samsung-hbm-official-statement",
+    snippet:
+      "삼성전자는 엔비디아向 HBM 공급 물량 확대 협의설에 대해 아직 확정된 바 없다고 공식 입장을 밝혔다.",
+    sourceType: "ir",
+    sourceReliability: 0.95,
   },
 ];
 
@@ -130,6 +170,8 @@ export const relations: Relation[] = [
     targetId: "hbm",
     type: "USES",
     evidenceIds: ["ev-1"],
+    status: "confirmed",
+    confidence: 0.95,
   },
   {
     id: "rel-2",
@@ -137,6 +179,8 @@ export const relations: Relation[] = [
     targetId: "sk-hynix",
     type: "SUPPLIED_BY",
     evidenceIds: ["ev-2"],
+    status: "confirmed",
+    confidence: 0.93,
   },
   {
     id: "rel-3",
@@ -144,6 +188,13 @@ export const relations: Relation[] = [
     targetId: "samsung",
     type: "SUPPLIED_BY",
     evidenceIds: ["ev-2"],
+    status: "disputed",
+    confidence: 0.55,
+    counterClaim: {
+      description:
+        "삼성전자는 공식 입장에서 엔비디아向 HBM 공급 협의가 아직 확정되지 않았다고 밝혔다.",
+      evidenceIds: ["ev-8"],
+    },
   },
   {
     id: "rel-4",
@@ -151,6 +202,8 @@ export const relations: Relation[] = [
     targetId: "samsung",
     type: "COMPETES_WITH",
     evidenceIds: [],
+    status: "inferred",
+    confidence: 0.6,
   },
   {
     id: "rel-5",
@@ -158,6 +211,8 @@ export const relations: Relation[] = [
     targetId: "nvidia",
     type: "QUALIFICATION_TEST_WITH",
     evidenceIds: ["ev-6"],
+    status: "confirmed",
+    confidence: 0.89,
   },
   {
     id: "rel-6",
@@ -165,6 +220,8 @@ export const relations: Relation[] = [
     targetId: "nvidia",
     type: "QUALIFICATION_TEST_WITH",
     evidenceIds: ["ev-7"],
+    status: "highly-likely",
+    confidence: 0.74,
   },
   {
     id: "rel-7",
@@ -172,6 +229,8 @@ export const relations: Relation[] = [
     targetId: "hanmi-semi",
     type: "SUPPLIED_BY",
     evidenceIds: ["ev-3"],
+    status: "confirmed",
+    confidence: 0.91,
   },
   {
     id: "rel-8",
@@ -179,6 +238,8 @@ export const relations: Relation[] = [
     targetId: "memory-sector",
     type: "BELONGS_TO",
     evidenceIds: [],
+    status: "inferred",
+    confidence: 0.62,
   },
   {
     id: "rel-9",
@@ -186,6 +247,8 @@ export const relations: Relation[] = [
     targetId: "memory-sector",
     type: "BELONGS_TO",
     evidenceIds: [],
+    status: "unverified",
+    confidence: 0.4,
   },
   {
     id: "rel-10",
@@ -193,6 +256,8 @@ export const relations: Relation[] = [
     targetId: "soxx-etf",
     type: "HELD_BY",
     evidenceIds: ["ev-4"],
+    status: "highly-likely",
+    confidence: 0.76,
   },
   {
     id: "rel-11",
@@ -200,6 +265,8 @@ export const relations: Relation[] = [
     targetId: "soxx-etf",
     type: "HELD_BY",
     evidenceIds: ["ev-4"],
+    status: "highly-likely",
+    confidence: 0.76,
   },
   {
     id: "rel-12",
@@ -207,6 +274,8 @@ export const relations: Relation[] = [
     targetId: "nvidia",
     type: "COMPETES_WITH",
     evidenceIds: ["ev-5"],
+    status: "highly-likely",
+    confidence: 0.82,
   },
 ];
 
@@ -226,6 +295,8 @@ export const issues: Issue[] = [
         description:
           "엔비디아의 GPU 생산 확대로 GPU 1개당 탑재되는 HBM 수량이 늘어나며 HBM 수요가 직접적으로 증가한다.",
         evidenceIds: ["ev-1"],
+        status: "confirmed",
+        confidence: 0.95,
       },
       {
         entityId: "sk-hynix",
@@ -234,6 +305,8 @@ export const issues: Issue[] = [
         description:
           "HBM 주요 공급사인 SK하이닉스는 물량 확대의 직접적인 수혜를 받을 것으로 예상된다.",
         evidenceIds: ["ev-2"],
+        status: "highly-likely",
+        confidence: 0.8,
       },
       {
         entityId: "samsung",
@@ -242,6 +315,13 @@ export const issues: Issue[] = [
         description:
           "삼성전자 역시 HBM 공급사로서 물량 확대 협의가 진행 중이며 수혜가 예상된다.",
         evidenceIds: ["ev-2"],
+        status: "disputed",
+        confidence: 0.55,
+        counterClaim: {
+          description:
+            "삼성전자는 공식 입장에서 엔비디아向 HBM 공급 협의가 아직 확정되지 않았다고 밝혔다.",
+          evidenceIds: ["ev-8"],
+        },
       },
       {
         entityId: "hanmi-semi",
@@ -250,6 +330,8 @@ export const issues: Issue[] = [
         description:
           "SK하이닉스의 HBM 증산은 후공정 장비를 공급하는 한미반도체의 수주 증가로 이어진다.",
         evidenceIds: ["ev-3"],
+        status: "confirmed",
+        confidence: 0.9,
       },
       {
         entityId: "soxx-etf",
@@ -258,6 +340,8 @@ export const issues: Issue[] = [
         description:
           "SK하이닉스·한미반도체 비중이 높은 국내 반도체 ETF 전반이 동반 강세를 보였다.",
         evidenceIds: ["ev-4"],
+        status: "highly-likely",
+        confidence: 0.75,
       },
       {
         entityId: "amd",
@@ -266,6 +350,8 @@ export const issues: Issue[] = [
         description:
           "경쟁사 AMD는 엔비디아의 증산 공세에 맞서 가격 정책을 조정해야 할 수 있어 단기적으로 마진 압박 우려가 있다.",
         evidenceIds: ["ev-5"],
+        status: "highly-likely",
+        confidence: 0.78,
       },
     ],
   },
@@ -284,6 +370,8 @@ export const issues: Issue[] = [
         description:
           "SK하이닉스가 엔비디아의 HBM4 품질 인증을 통과해 차세대 제품 공급망에 우선 진입했다.",
         evidenceIds: ["ev-6"],
+        status: "confirmed",
+        confidence: 0.89,
       },
       {
         entityId: "samsung",
@@ -292,6 +380,8 @@ export const issues: Issue[] = [
         description:
           "경쟁사인 삼성전자는 아직 인증 마지막 단계에 있어 상대적으로 공급 개시 시점이 늦어질 가능성이 있다.",
         evidenceIds: ["ev-7"],
+        status: "highly-likely",
+        confidence: 0.7,
       },
       {
         entityId: "soxx-etf",
@@ -300,6 +390,8 @@ export const issues: Issue[] = [
         description:
           "SK하이닉스 비중이 높은 반도체 ETF에 긍정적인 영향을 줄 수 있다.",
         evidenceIds: [],
+        status: "unverified",
+        confidence: 0.42,
       },
     ],
   },
@@ -339,4 +431,22 @@ export function getRelationsFrom(entityId: string): Relation[] {
 
 export function getRelationsTo(entityId: string): Relation[] {
   return relations.filter((r) => r.targetId === entityId);
+}
+
+const STATUS_PRIORITY: Record<ClaimStatus, number> = {
+  disputed: 0,
+  unverified: 1,
+  inferred: 2,
+  "highly-likely": 3,
+  confirmed: 4,
+};
+
+export function getIssueConfidenceSummary(issue: Issue): {
+  status: ClaimStatus;
+  confidence: number;
+} {
+  const worst = issue.chain.reduce((acc, step) =>
+    STATUS_PRIORITY[step.status] < STATUS_PRIORITY[acc.status] ? step : acc
+  );
+  return { status: worst.status, confidence: worst.confidence };
 }

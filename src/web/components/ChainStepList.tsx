@@ -1,3 +1,5 @@
+import { ConfidenceBadge } from "@/components/ConfidenceBadge";
+import { CounterClaim } from "@/components/CounterClaim";
 import { EntityBadge } from "@/components/EntityBadge";
 import { EvidenceList } from "@/components/EvidenceList";
 import { cn } from "@/lib/utils";
@@ -53,16 +55,25 @@ export function ChainStepList({ chain }: { chain: ChainStep[] }) {
                     LEVEL_ACCENT[level]
                   )}
                 >
-                  <div className="flex flex-wrap items-center gap-1.5">
-                    <EntityBadge entity={entity} />
-                    <span className="text-xs font-medium text-muted-foreground">
-                      {RELATION_LABELS[step.relationType]}
-                    </span>
+                  <div className="flex flex-wrap items-center justify-between gap-1.5">
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      <EntityBadge entity={entity} />
+                      <span className="text-xs font-medium text-muted-foreground">
+                        {RELATION_LABELS[step.relationType]}
+                      </span>
+                    </div>
+                    <ConfidenceBadge
+                      status={step.status}
+                      confidence={step.confidence}
+                    />
                   </div>
                   <p className="text-sm leading-relaxed text-foreground">
                     {step.description}
                   </p>
                   <EvidenceList evidenceIds={step.evidenceIds} />
+                  {step.status === "disputed" && step.counterClaim && (
+                    <CounterClaim counterClaim={step.counterClaim} />
+                  )}
                 </div>
               );
             })}

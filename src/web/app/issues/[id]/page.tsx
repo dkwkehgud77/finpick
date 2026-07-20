@@ -24,7 +24,7 @@ export default async function IssueDetailPage({
   const rootEntity = getEntity(issue.rootEntityId);
 
   return (
-    <div className="flex flex-col gap-5 px-4 pb-6 pt-4">
+    <div className="flex flex-col gap-5 px-4 pb-6 pt-4 md:mx-auto md:w-full md:max-w-2xl md:px-6">
       <Link
         href="/"
         className="flex w-fit items-center gap-1 rounded-full py-1.5 pr-3 text-sm font-semibold text-muted-foreground transition-colors hover:text-foreground"

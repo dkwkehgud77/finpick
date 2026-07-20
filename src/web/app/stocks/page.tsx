@@ -19,7 +19,7 @@ export default function StocksPage() {
   });
 
   return (
-    <div className="flex flex-col gap-5 px-4 pb-6 pt-6">
+    <div className="flex flex-col gap-5 px-4 pb-6 pt-6 md:px-6">
       <header className="flex flex-col gap-1 px-1">
         <h1 className="text-[22px] font-extrabold tracking-tight text-foreground">
           종목
@@ -29,7 +29,7 @@ export default function StocksPage() {
         </p>
       </header>
 
-      <div className="relative">
+      <div className="relative md:max-w-md">
         <Search className="absolute left-4 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
         <input
           value={query}
@@ -39,7 +39,7 @@ export default function StocksPage() {
         />
       </div>
 
-      <div className="flex flex-col gap-2.5">
+      <div className="grid grid-cols-1 gap-2.5 md:grid-cols-2 xl:grid-cols-3">
         {filtered.map((entity) => (
           <Link
             key={entity.id}

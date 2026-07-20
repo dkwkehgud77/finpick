@@ -7,8 +7,8 @@ export default function HomePage() {
   );
 
   return (
-    <div className="flex flex-col gap-5 px-4 pb-6 pt-6">
-      <header className="flex flex-col gap-1 px-1">
+    <div className="flex flex-col gap-5 px-4 pb-6 pt-6 md:px-6">
+      <header className="flex flex-col gap-1 px-1 md:max-w-xl">
         <p className="text-sm font-semibold text-primary">핀픽</p>
         <h1 className="text-[22px] font-extrabold tracking-tight text-foreground">
           오늘의 이슈를
@@ -20,7 +20,7 @@ export default function HomePage() {
         </p>
       </header>
 
-      <div className="flex flex-col gap-3">
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
         {sortedIssues.map((issue) => (
           <IssueCard key={issue.id} issue={issue} />
         ))}
