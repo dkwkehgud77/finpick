@@ -2,10 +2,11 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { AnalyzerStatusList } from "@/components/AnalyzerStatusList";
-import { EntityGraph, type GraphEdge } from "@/components/EntityGraph";
+import { EntityGraph } from "@/components/EntityGraph";
 import { RelationList } from "@/components/RelationList";
 import { IssueCard } from "@/components/IssueCard";
 import { ENTITY_TYPE_CHIP, ENTITY_TYPE_LABELS } from "@/lib/entity-style";
+import { getCoreEdges } from "@/lib/graph";
 import {
   entities,
   getEntity,
@@ -33,19 +34,7 @@ export default async function StockDetailPage({
   const outgoing = getRelationsFrom(entity.id);
   const incoming = getRelationsTo(entity.id);
   const relatedIssues = getIssuesForEntity(entity.id);
-
-  const graphEdges: GraphEdge[] = [
-    ...outgoing.map((relation) => ({
-      relation,
-      entity: getEntity(relation.targetId),
-      direction: "outgoing" as const,
-    })),
-    ...incoming.map((relation) => ({
-      relation,
-      entity: getEntity(relation.sourceId),
-      direction: "incoming" as const,
-    })),
-  ].filter((edge): edge is GraphEdge => !!edge.entity);
+  const hasCoreRelations = getCoreEdges(entity.id).length > 0;
 
   return (
     <div className="flex flex-col gap-5 px-4 pb-6 pt-4 md:mx-auto md:w-full md:max-w-2xl md:px-6">
@@ -73,9 +62,7 @@ export default async function StockDetailPage({
         </p>
       </header>
 
-      {graphEdges.length > 0 && (
-        <EntityGraph center={entity} edges={graphEdges} />
-      )}
+      {hasCoreRelations && <EntityGraph rootEntityId={entity.id} />}
 
       {entity.analyzers && <AnalyzerStatusList analyzers={entity.analyzers} />}
 
