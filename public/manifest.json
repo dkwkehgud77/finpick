@@ -1,0 +1,17 @@
+{
+  "name": "핀픽 - 주식한입",
+  "short_name": "핀픽",
+  "description": "온톨로지 기반 연쇄영향 분석으로 주식 이슈를 한입에 이해하는 앱",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0f172a",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    }
+  ]
+}
