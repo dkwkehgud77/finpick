@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { ChainStepList } from "@/components/ChainStepList";
 import { EntityBadge } from "@/components/EntityBadge";
+import { IssueGraph } from "@/components/IssueGraph";
 import { getEntity, getIssue, issues } from "@/lib/mock-data";
 
 export function generateStaticParams() {
@@ -45,6 +46,8 @@ export default async function IssueDetailPage({
           {issue.publishedAt}
         </span>
       </header>
+
+      <IssueGraph issue={issue} showIssueLink={false} />
 
       <div className="flex flex-col gap-2.5">
         <h2 className="px-1 text-[15px] font-bold text-foreground">

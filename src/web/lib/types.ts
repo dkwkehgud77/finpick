@@ -73,6 +73,8 @@ export type ImpactLevel = "direct" | "indirect-1" | "indirect-2";
 
 export type ChainStep = {
   entityId: string;
+  /** Entity this step's impact flows from. Omitted = flows from the issue's rootEntityId. */
+  causeEntityId?: string;
   level: ImpactLevel;
   relationType: RelationType;
   description: string;

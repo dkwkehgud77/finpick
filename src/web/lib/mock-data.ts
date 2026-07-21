@@ -300,6 +300,7 @@ export const issues: Issue[] = [
       },
       {
         entityId: "sk-hynix",
+        causeEntityId: "hbm",
         level: "indirect-1",
         relationType: "SUPPLIED_BY",
         description:
@@ -310,6 +311,7 @@ export const issues: Issue[] = [
       },
       {
         entityId: "samsung",
+        causeEntityId: "hbm",
         level: "indirect-1",
         relationType: "SUPPLIED_BY",
         description:
@@ -325,6 +327,7 @@ export const issues: Issue[] = [
       },
       {
         entityId: "hanmi-semi",
+        causeEntityId: "sk-hynix",
         level: "indirect-2",
         relationType: "SUPPLIED_BY",
         description:
@@ -335,6 +338,7 @@ export const issues: Issue[] = [
       },
       {
         entityId: "soxx-etf",
+        causeEntityId: "hanmi-semi",
         level: "indirect-2",
         relationType: "HELD_BY",
         description:

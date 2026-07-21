@@ -2,11 +2,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { AnalyzerStatusList } from "@/components/AnalyzerStatusList";
-import { EntityGraph } from "@/components/EntityGraph";
+import { IssueGraph } from "@/components/IssueGraph";
 import { RelationList } from "@/components/RelationList";
 import { IssueCard } from "@/components/IssueCard";
 import { ENTITY_TYPE_CHIP, ENTITY_TYPE_LABELS } from "@/lib/entity-style";
-import { getCoreEdges } from "@/lib/graph";
 import {
   entities,
   getEntity,
@@ -33,8 +32,12 @@ export default async function StockDetailPage({
 
   const outgoing = getRelationsFrom(entity.id);
   const incoming = getRelationsTo(entity.id);
-  const relatedIssues = getIssuesForEntity(entity.id);
-  const hasCoreRelations = getCoreEdges(entity.id).length > 0;
+  const relatedIssues = [...getIssuesForEntity(entity.id)].sort((a, b) =>
+    b.publishedAt.localeCompare(a.publishedAt)
+  );
+  const storyIssue =
+    relatedIssues.find((issue) => issue.rootEntityId === entity.id) ??
+    relatedIssues[0];
 
   return (
     <div className="flex flex-col gap-5 px-4 pb-6 pt-4 md:mx-auto md:w-full md:max-w-2xl md:px-6">
@@ -62,7 +65,7 @@ export default async function StockDetailPage({
         </p>
       </header>
 
-      {hasCoreRelations && <EntityGraph rootEntityId={entity.id} />}
+      {storyIssue && <IssueGraph issue={storyIssue} />}
 
       {entity.analyzers && <AnalyzerStatusList analyzers={entity.analyzers} />}
 
